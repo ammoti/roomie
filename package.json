@@ -4,7 +4,7 @@
   "description": "A NativeScript-built iOS and Android app for matching people each other",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nativescript/sample-Groceries.git"
+    "url": "https://github.com/ammoti/roomie.git"
   },
   "keywords": [
     "NativeScript",
@@ -13,11 +13,11 @@
   "author": "Vahap Yigit <vahap.yigit@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nativescript/sample-Groceries/issues"
+    "url": "https://github.com/ammoti/roomie/issues"
   },
-  "homepage": "https://github.com/nativescript/sample-Groceries/groceries",
+  "homepage": "https://github.com/ammoti/roomie",
   "nativescript": {
-    "id": "org.nativescript.groceries",
+    "id": "org.ammoti.roomie",
     "tns-android": {
       "version": "6.0.1"
     },
