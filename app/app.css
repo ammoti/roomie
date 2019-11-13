@@ -1,0 +1,17 @@
+@import url("./platform.css");
+
+Page {
+  font-size: 15;
+  background-color: black;
+}
+ActionBar {
+  background-color: black;
+  color: white;
+}
+TextField {
+  padding: 10;
+  font-size: 13;
+}
+.line-through {
+  text-decoration: line-through;
+}
