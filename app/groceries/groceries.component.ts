@@ -5,15 +5,15 @@ import { Page } from "tns-core-modules/ui/page";
 import { TextField } from "tns-core-modules/ui/text-field";
 import * as SocialShare from "nativescript-social-share";
 
-import { GroceryService } from "./shared";
-import { LoginService, alert } from "../shared";
+import { LoginService, MatchService } from "../services/index";
+import { alert } from "../shared";
 
 @Component({
-  selector: "gr-groceries",
+  selector: "rm-groceries",
   moduleId: module.id,
   templateUrl: "./groceries.component.html",
   styleUrls: ["./groceries-common.css", "./groceries.component.css"],
-  providers: [GroceryService]
+  providers: [MatchService]
 })
 export class GroceriesComponent implements OnInit {
   grocery: string = "";
@@ -23,7 +23,7 @@ export class GroceriesComponent implements OnInit {
   @ViewChild("groceryTextField", { static: false }) groceryTextField: ElementRef;
 
   constructor(private router: Router,
-    private store: GroceryService,
+    private store: MatchService,
     private loginService: LoginService,
     private page: Page) {}
 

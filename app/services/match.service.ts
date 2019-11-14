@@ -7,13 +7,13 @@ import {
 import { BehaviorSubject, throwError } from "rxjs";
 import { map, catchError } from "rxjs/operators";
 
-import { BackendService } from "../../shared";
-import { Grocery } from "./grocery.model";
+import { BackendService } from "../services/backend.service";
+import { Match } from "../models/match.model";
 
 @Injectable()
-export class GroceryService {
-  items: BehaviorSubject<Array<Grocery>> = new BehaviorSubject([]);
-  private allItems: Array<Grocery> = [];
+export class MatchService {
+  items: BehaviorSubject<Array<Match>> = new BehaviorSubject([]);
+  private allItems: Array<Match> = [];
   baseUrl = BackendService.baseUrl + "appdata/" + BackendService.appKey + "/Groceries";
 
   constructor(private http: HttpClient, private zone: NgZone) { }
@@ -29,7 +29,7 @@ export class GroceryService {
             return a._kmd.lmt > b._kmd.lmt ? -1 : 1;
           })
           .map(
-            grocery => new Grocery(
+            grocery => new Match(
               grocery._id,
               grocery.Name,
               grocery.Done || false,
@@ -50,14 +50,14 @@ export class GroceryService {
     )
     .pipe(
       map((data: any) => {
-        this.allItems.unshift(new Grocery(data._id, name, false, false));
+        this.allItems.unshift(new Match(data._id, name, false, false));
         this.publishUpdates();
       }),
       catchError(this.handleErrors)
     );
   }
 
-  setDeleteFlag(item: Grocery) {
+  setDeleteFlag(item: Match) {
     item.deleted = true;
     return this.put(item)
       .pipe(
@@ -68,7 +68,7 @@ export class GroceryService {
       );
   }
 
-  unsetDeleteFlag(item: Grocery) {
+  unsetDeleteFlag(item: Match) {
     item.deleted = false;
     return this.put(item)
       .pipe(
@@ -80,13 +80,13 @@ export class GroceryService {
   }
 
 
-  toggleDoneFlag(item: Grocery) {
+  toggleDoneFlag(item: Match) {
     item.done = !item.done;
     this.publishUpdates();
     return this.put(item);
   }
 
-  permanentlyDelete(item: Grocery) {
+  permanentlyDelete(item: Match) {
     return this.http
       .delete(
         this.baseUrl + "/" + item.id,
@@ -102,7 +102,7 @@ export class GroceryService {
       );
   }
 
-  private put(grocery: Grocery) {
+  private put(grocery: Match) {
     return this.http.put(
       this.baseUrl + "/" + grocery.id,
       JSON.stringify({

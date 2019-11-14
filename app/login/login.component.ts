@@ -1,35 +1,48 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { Color } from "tns-core-modules/color";
-import { connectionType, getConnectionType } from "tns-core-modules/connectivity";
+import {
+  connectionType,
+  getConnectionType
+} from "tns-core-modules/connectivity";
 import { Animation } from "tns-core-modules/ui/animation";
 import { View } from "tns-core-modules/ui/core/view";
 import { prompt } from "tns-core-modules/ui/dialogs";
 import { Page } from "tns-core-modules/ui/page";
 
-import { alert, LoginService, User } from "../shared";
+import * as Facebook from "nativescript-facebook";
+
+import { alert } from "../shared";
+
+import { LoginService } from "../services/login.service";
+import { User } from "../models/user.model";
 
 @Component({
-  selector: "gr-login",
+  selector: "rm-login",
   moduleId: module.id,
   templateUrl: "./login.component.html",
-  styleUrls: ["./login-common.css", "./login.component.css"],
+  styleUrls: ["./login-common.css", "./login.component.css"]
 })
 export class LoginComponent implements OnInit {
   user: User;
   isLoggingIn = true;
   isAuthenticating = false;
+  public items: Array<string> = ["İstanbul", "İzmir", "Ankara", "Malatya"];
 
-  @ViewChild("initialContainer", { static: false }) initialContainer: ElementRef;
+  @ViewChild("initialContainer", { static: false })
+  initialContainer: ElementRef;
   @ViewChild("mainContainer", { static: false }) mainContainer: ElementRef;
   @ViewChild("logoContainer", { static: false }) logoContainer: ElementRef;
   @ViewChild("formControls", { static: false }) formControls: ElementRef;
   @ViewChild("signUpStack", { static: false }) signUpStack: ElementRef;
   @ViewChild("password", { static: false }) password: ElementRef;
+  @ViewChild("ScrollList", { static: false }) scrollList: ElementRef;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private userService: LoginService,
-    private page: Page) {
+    private page: Page
+  ) {
     this.user = new User();
     // this.page.className = "login-page";
   }
@@ -69,17 +82,16 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.userService.login(this.user)
-      .subscribe(
-        () => {
-          this.isAuthenticating = false;
-          this.router.navigate(["/"]);
-        },
-        (error) => {
-          alert("Unfortunately we could not find your account.");
-          this.isAuthenticating = false;
-        }
-      );
+    this.userService.login(this.user).subscribe(
+      () => {
+        this.isAuthenticating = false;
+        this.router.navigate(["/"]);
+      },
+      error => {
+        alert("Unfortunately we could not find your account.");
+        this.isAuthenticating = false;
+      }
+    );
   }
 
   signUp() {
@@ -88,39 +100,54 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.userService.register(this.user)
-      .subscribe(
-        () => {
-          alert("Your account was successfully created.");
-          this.isAuthenticating = false;
-          this.toggleDisplay();
-        },
-        (errorDetails) => {
-          if (errorDetails.error && errorDetails.error.error === "UserAlreadyExists") {
-            alert("This email address is already in use.");
-          } else {
-            alert("Unfortunately we were unable to create your account.");
-          }
-          this.isAuthenticating = false;
+    this.userService.register(this.user).subscribe(
+      () => {
+        alert("Your account was successfully created.");
+        this.isAuthenticating = false;
+        this.toggleDisplay();
+      },
+      errorDetails => {
+        if (
+          errorDetails.error &&
+          errorDetails.error.error === "UserAlreadyExists"
+        ) {
+          alert("This email address is already in use.");
+        } else {
+          alert("Unfortunately we were unable to create your account.");
         }
-      );
+        this.isAuthenticating = false;
+      }
+    );
+  }
+
+  onLogin(eventData: Facebook.LoginEventData)  {
+    if  (eventData.error) {
+      console.error(eventData.error);
+    } else {
+      console.log("token is : ",  eventData.loginResponse.token);
+    }
   }
 
   forgotPassword() {
     prompt({
       title: "Forgot Password",
-      message: "Enter the email address you used to register for Groceries to reset your password.",
+      message:
+        "Enter the email address you used to register for Groceries to reset your password.",
       defaultText: "",
       okButtonText: "Ok",
       cancelButtonText: "Cancel"
-    }).then((data) => {
+    }).then(data => {
       if (data.result) {
-        this.userService.resetPassword(data.text.trim())
-          .subscribe(() => {
-            alert("Your password was successfully reset. Please check your email for instructions on choosing a new password.");
-          }, () => {
+        this.userService.resetPassword(data.text.trim()).subscribe(
+          () => {
+            alert(
+              "Your password was successfully reset. Please check your email for instructions on choosing a new password."
+            );
+          },
+          () => {
             alert("Unfortunately, an error occurred resetting your password.");
-          });
+          }
+        );
       }
     });
   }
@@ -129,9 +156,18 @@ export class LoginComponent implements OnInit {
     this.isLoggingIn = !this.isLoggingIn;
     let mainContainer = <View>this.mainContainer.nativeElement;
     mainContainer.animate({
-      backgroundColor: this.isLoggingIn ? new Color("white") : new Color("#301217"),
+      backgroundColor: this.isLoggingIn
+        ? new Color("white")
+        : new Color("#301217"),
       duration: 200
     });
+    this.scrollList.nativeElement.scrollToVerticalOffset(0);
+    if (!this.isLoggingIn) {
+      this.formControls.nativeElement.rows = "auto, auto, auto, auto, auto, auto";
+    }
+    else {
+      this.formControls.nativeElement.rows = "50, 50";
+    }
   }
 
   showMainContent() {
@@ -143,27 +179,41 @@ export class LoginComponent implements OnInit {
     let animations = [];
 
     // Fade out the initial content over one half second
-    initialContainer.animate({
-      opacity: 0,
-      duration: 500
-    }).then(function() {
-      // After the animation completes, hide the initial container and
-      // show the main container and logo. The main container and logo will
-      // not immediately appear because their opacity is set to 0 in CSS.
-      initialContainer.style.visibility = "collapse";
-      mainContainer.style.visibility = "visible";
-      logoContainer.style.visibility = "visible";
+    initialContainer
+      .animate({
+        opacity: 0,
+        duration: 500
+      })
+      .then(function() {
+        // After the animation completes, hide the initial container and
+        // show the main container and logo. The main container and logo will
+        // not immediately appear because their opacity is set to 0 in CSS.
+        initialContainer.style.visibility = "collapse";
+        mainContainer.style.visibility = "visible";
+        logoContainer.style.visibility = "visible";
 
-      // Fade in the main container and logo over one half second.
-      animations.push({ target: mainContainer, opacity: 1, duration: 500 });
-      animations.push({ target: logoContainer, opacity: 1, duration: 500 });
+        // Fade in the main container and logo over one half second.
+        animations.push({ target: mainContainer, opacity: 1, duration: 500 });
+        animations.push({ target: logoContainer, opacity: 1, duration: 500 });
 
-      // Slide up the form controls and sign up container.
-      animations.push({ target: signUpStack, translate: { x: 0, y: 0 }, opacity: 1, delay: 500, duration: 150 });
-      animations.push({ target: formControls, translate: { x: 0, y: 0 }, opacity: 1, delay: 650, duration: 150 });
+        // Slide up the form controls and sign up container.
+        animations.push({
+          target: signUpStack,
+          translate: { x: 0, y: 0 },
+          opacity: 1,
+          delay: 500,
+          duration: 150
+        });
+        animations.push({
+          target: formControls,
+          translate: { x: 0, y: 0 },
+          opacity: 1,
+          delay: 650,
+          duration: 150
+        });
 
-      // Kick off the animation queue
-      new Animation(animations, false).play();
-    });
+        // Kick off the animation queue
+        new Animation(animations, false).play();
+      });
   }
 }

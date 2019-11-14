@@ -3,7 +3,7 @@ import { HttpHeaders, HttpClient, HttpErrorResponse } from "@angular/common/http
 import { throwError } from "rxjs";
 import { tap, catchError } from "rxjs/operators";
 
-import { User } from "./user.model";
+import { User } from "../models/user.model";
 import { BackendService } from "./backend.service";
 
 @Injectable()

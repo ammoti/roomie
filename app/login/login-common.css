@@ -64,10 +64,20 @@ TextField.light {
   color: #C4AFB4;
   placeholder-color: #C4AFB4;
 }
+
+ListPicker.light{
+  color:#C4AFB4;
+}
+
 .submit-button {
   background-color: #CB1D00;
   color: white;
   margin-top: 20;
+}
+.facebook-button {
+  margin-top: 20;
+  margin-left:16;
+  margin-right: 16;
 }
 
 .forgot-password-label {

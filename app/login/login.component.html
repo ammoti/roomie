@@ -15,8 +15,8 @@
     </StackLayout>
   </StackLayout>
   <StackLayout #mainContainer class="main-container">
-    <ScrollView orientation="vertical">
-      <GridLayout rows="auto auto auto auto 25">
+    <ScrollView #ScrollList orientation="vertical">
+      <GridLayout rows="auto auto auto auto auto 25">
         <Label
           class="main-label"
           text="ROOMIE"
@@ -26,7 +26,7 @@
         <GridLayout
           #formControls
           class="form-controls"
-          rows="auto, auto, auto, auto, 20"
+          rows="50,50"
           orientation="vertical"
           translateY="50"
           row="1"
@@ -75,8 +75,9 @@
           ></TextField>
           <ListPicker
             [isEnabled]="!isAuthenticating"
-            [visibility]="!isLoggingIn? 'visible' : 'hidden'"
+            [visibility]="!isLoggingIn ? 'visible' : 'hidden'"
             [items]="items"
+            [class.light]="!isLoggingIn"
             row="4"
           ></ListPicker>
 
@@ -92,13 +93,13 @@
           (tap)="submit()"
           row="2"
         ></Button>
-
+        <FacebookLoginButton (login)="onLogin($event)" class="facebook-button" row="3"></FacebookLoginButton>
         <Label
           class="forgot-password-label"
           text="Forgot password?"
           (tap)="forgotPassword()"
           [visibility]="isLoggingIn ? 'visible' : 'hidden'"
-          row="3"
+          row="4"
         ></Label>
 
         <StackLayout
@@ -106,7 +107,7 @@
           class="sign-up-stack"
           (tap)="toggleDisplay()"
           translateY="50"
-          row="4"
+          row="5"
         >
           <Label
             [text]="isLoggingIn ? 'Sign up here' : 'Back to login'"

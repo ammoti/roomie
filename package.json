@@ -50,6 +50,7 @@
     "@angular/router": "~8.2.0",
     "email-validator": "^2.0.4",
     "nativescript-angular": "~8.2.0",
+    "nativescript-facebook": "^4.2.1",
     "nativescript-iqkeyboardmanager": "~1.3.0",
     "nativescript-social-share": "~1.5.1",
     "nativescript-unit-test-runner": "0.7.0",

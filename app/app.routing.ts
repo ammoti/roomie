@@ -1,4 +1,4 @@
-import { AuthGuard } from "./auth-guard.service";
+import { AuthGuard } from "./auth/auth-guard.service";
 
 export const authProviders = [
   AuthGuard

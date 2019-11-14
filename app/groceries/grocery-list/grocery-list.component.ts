@@ -6,7 +6,7 @@ import { alert } from "../../shared";
 declare var UIColor: any;
 
 @Component({
-  selector: "gr-grocery-list",
+  selector: "rm-grocery-list",
   moduleId: module.id,
   templateUrl: "./grocery-list.component.html",
   styleUrls: ["./grocery-list.component.css"],
