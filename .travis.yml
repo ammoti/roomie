@@ -9,7 +9,7 @@ env:
     - IOS_SAUCE_STORAGE="https://saucelabs.com/rest/v1/storage/$SAUCE_USER/$IOS_PACKAGE?overwrite=true"
 branches:
   only: 
-    - master
+    - Development
 matrix:
   include:
     - stage: "Lint"
