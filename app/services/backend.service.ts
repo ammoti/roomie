@@ -4,7 +4,7 @@ import { getString, setString } from "tns-core-modules/application-settings";
 const tokenKey = "token";
 
 export class BackendService {
-  static baseUrl = "https://baas.kinvey.com/";
+  static baseUrl = "https://localhost:5001/";
   static appKey = "kid_HyHoT_REf";
   static appUserHeader = "Basic a2lkX0h5SG9UX1JFZjo1MTkxMDJlZWFhMzQ0MzMyODFjN2MyODM3MGQ5OTIzMQ";
   static apiUrl = "";

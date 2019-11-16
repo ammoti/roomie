@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output, AfterViewInit } from "@angular/core";
 
-import { Grocery, GroceryService } from "../shared";
+import { MatchService } from "../../services/match.service";
+import { Match } from "../../models/match.model";
 import { alert } from "../../shared";
 
 declare var UIColor: any;
@@ -18,10 +19,10 @@ export class GroceryListComponent implements AfterViewInit {
   @Output() loading = new EventEmitter();
   @Output() loaded = new EventEmitter();
 
-  public store: GroceryService;
+  public store: MatchService;
   listLoaded = false;
 
-  constructor(store: GroceryService) {
+  constructor(store: MatchService) {
       this.store = store;
   }
   ngAfterViewInit() {
@@ -58,7 +59,7 @@ export class GroceryListComponent implements AfterViewInit {
     return grocery.done ? "res://checked" : "res://unchecked";
   }
 
-  toggleDone(grocery: Grocery) {
+  toggleDone(grocery: Match) {
     if (grocery.deleted) {
       this.store.unsetDeleteFlag(grocery)
         .subscribe(
@@ -78,7 +79,7 @@ export class GroceryListComponent implements AfterViewInit {
     }
   }
 
-  delete(grocery: Grocery) {
+  delete(grocery: Match) {
     this.loading.next("");
     let successHandler = () => this.loaded.next("");
     let errorHandler = () => {
