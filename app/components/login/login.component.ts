@@ -12,16 +12,16 @@ import { Page } from "tns-core-modules/ui/page";
 
 import * as Facebook from "nativescript-facebook";
 
-import { alert } from "../shared";
+import { alert } from "../../shared";
 
-import { LoginService } from "../services/login.service";
-import { User } from "../models/user.model";
+import { LoginService } from "../../services/login.service";
+import { User } from "../../models/user.model";
 
 @Component({
   selector: "rm-login",
   moduleId: module.id,
   templateUrl: "./login.component.html",
-  styleUrls: ["./login-common.css", "./login.component.css"]
+  styleUrls: ["./css/login-common.css", "./css/login.component.css"]
 })
 export class LoginComponent implements OnInit {
   user: User;

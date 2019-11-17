@@ -1,0 +1,20 @@
+<GridLayout #container class="background" rows="auto,200,30">
+  <!-- Row 1: The custom action bar -->
+  <GridLayout row="0" columns="44, *, auto" class="action-bar-custom">
+    <Label col="1" text="Roomie"></Label>
+
+    <!-- Wrap the image in a StackLayout to give it a bigger tap target -->
+    <GridLayout col="2" (tap)="showMenu()">
+      <Image src="res://menu" stretch="none"></Image>
+    </GridLayout>
+  </GridLayout>
+  <!-- Row 3: The grocery list -->
+  <rm-match-list
+    [row]="1"
+    (loading)="showActivityIndicator()"
+    (loaded)="hideActivityIndicator()"
+    class="matchList"
+  ></rm-match-list>
+
+  <ActivityIndicator [busy]="isLoading" row="2"></ActivityIndicator>
+</GridLayout>

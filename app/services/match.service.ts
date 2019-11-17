@@ -14,7 +14,7 @@ import { Match } from "../models/match.model";
 export class MatchService {
   items: BehaviorSubject<Array<Match>> = new BehaviorSubject([]);
   private allItems: Array<Match> = [];
-  baseUrl = BackendService.baseUrl + "appdata/" + BackendService.appKey + "/Groceries";
+  baseUrl = BackendService.baseUrl + "api/users/" + BackendService.appKey + "/allUser";
 
   constructor(private http: HttpClient, private zone: NgZone) { }
 
@@ -25,15 +25,15 @@ export class MatchService {
     .pipe(
       map((data: any[]) => {
         this.allItems = data
-          .sort((a, b) => {
-            return a._kmd.lmt > b._kmd.lmt ? -1 : 1;
-          })
+          // .sort((a, b) => {
+          //   return a._kmd.lmt > b._kmd.lmt ? -1 : 1;
+          // })
           .map(
-            grocery => new Match(
-              grocery._id,
-              grocery.Name,
-              grocery.Done || false,
-              grocery.Deleted || false
+            match => new Match(
+              match.id,
+              match.name,
+              match.email,
+              match.dateOfBirth
           )
         );
         this.publishUpdates();
@@ -43,47 +43,47 @@ export class MatchService {
   }
 
   add(name: string) {
-    return this.http.post(
-      this.baseUrl,
-      JSON.stringify({ Name: name }),
-      { headers: this.getCommonHeaders() }
-    )
-    .pipe(
-      map((data: any) => {
-        this.allItems.unshift(new Match(data._id, name, false, false));
-        this.publishUpdates();
-      }),
-      catchError(this.handleErrors)
-    );
+    // return this.http.post(
+    //   this.baseUrl,
+    //   JSON.stringify({ Name: name }),
+    //   { headers: this.getCommonHeaders() }
+    // )
+    // .pipe(
+    //   map((data: any) => {
+    //     this.allItems.unshift(new Match(data._id, name, false, false));
+    //     this.publishUpdates();
+    //   }),
+    //   catchError(this.handleErrors)
+    // );
   }
 
   setDeleteFlag(item: Match) {
-    item.deleted = true;
-    return this.put(item)
-      .pipe(
-        map(data => {
-          item.done = false;
-          this.publishUpdates();
-        })
-      );
+    // item.deleted = true;
+    // return this.put(item)
+    //   .pipe(
+    //     map(data => {
+    //       item.done = false;
+    //       this.publishUpdates();
+    //     })
+    //   );
   }
 
   unsetDeleteFlag(item: Match) {
-    item.deleted = false;
-    return this.put(item)
-      .pipe(
-        map(data => {
-          item.done = false;
-          this.publishUpdates();
-        })
-      );
+    // item.deleted = false;
+    // return this.put(item)
+    //   .pipe(
+    //     map(data => {
+    //       item.done = false;
+    //       this.publishUpdates();
+    //     })
+    //   );
   }
 
 
   toggleDoneFlag(item: Match) {
-    item.done = !item.done;
-    this.publishUpdates();
-    return this.put(item);
+    // item.done = !item.done;
+    // this.publishUpdates();
+    // return this.put(item);
   }
 
   permanentlyDelete(item: Match) {
@@ -103,16 +103,16 @@ export class MatchService {
   }
 
   private put(grocery: Match) {
-    return this.http.put(
-      this.baseUrl + "/" + grocery.id,
-      JSON.stringify({
-        Name: grocery.name,
-        Done: grocery.done,
-        Deleted: grocery.deleted
-      }),
-      { headers: this.getCommonHeaders() }
-    )
-    .pipe(catchError(this.handleErrors));
+    // return this.http.put(
+    //   this.baseUrl + "/" + grocery.id,
+    //   JSON.stringify({
+    //     Name: grocery.name,
+    //     Done: grocery.done,
+    //     Deleted: grocery.deleted
+    //   }),
+    //   { headers: this.getCommonHeaders() }
+    // )
+    // .pipe(catchError(this.handleErrors));
   }
 
   private publishUpdates() {

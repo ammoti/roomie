@@ -8,11 +8,11 @@ import { AppComponent } from "./app.component";
 import { setStatusBarColors } from "./shared";
 import { BackendService, LoginService } from "./services";
 
-import { LoginModule } from "./login/login.module";
-import { GroceriesModule } from "./groceries/groceries.module";
+import { LoginModule } from "./components/login/login.module";
 
 import { NativeScriptFacebookModule } from "nativescript-facebook/angular";
 import * as application from "application";
+import { MatchesModule } from "./components/matches/matches.module";
 
 let nsFacebook = require("nativescript-facebook");
 application.on(application.launchEvent, function(args: any) {
@@ -29,7 +29,7 @@ setStatusBarColors();
     NativeScriptRouterModule,
     NativeScriptRouterModule.forRoot(appRoutes),
     LoginModule,
-    GroceriesModule,
+    MatchesModule,
     NativeScriptFacebookModule
   ],
   declarations: [AppComponent],
