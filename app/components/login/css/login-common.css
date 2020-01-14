@@ -74,6 +74,12 @@ ListPicker.light{
   color: white;
   margin-top: 20;
 }
+.pick-photo {
+  background-color: crimson;
+  color: white;
+  margin-bottom:20;
+  margin-top:20px;
+}
 .facebook-button {
   margin-top: 20;
   margin-left:16;

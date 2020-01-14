@@ -11,6 +11,12 @@ import { prompt } from "tns-core-modules/ui/dialogs";
 import { Page } from "tns-core-modules/ui/page";
 
 import * as Facebook from "nativescript-facebook";
+import * as imagepicker from "nativescript-imagepicker";
+import {
+  ImageSource,
+  fromNativeSource,
+  fromAsset
+} from "tns-core-modules/image-source";
 
 import { alert } from "../../shared";
 
@@ -27,7 +33,13 @@ export class LoginComponent implements OnInit {
   user: User;
   isLoggingIn = true;
   isAuthenticating = false;
-  public items: Array<string> = ["İstanbul", "İzmir", "Ankara", "Malatya"];
+  public items: Array<string> = ["İstanbul", "İzmir", "Ankara", "Malatya","Adana","Adıyaman","Afyon","Ağrı","Aksaray","Amasya","Antalya","Ardahan","Balıkesir","Bursa","Bilecik","Iğdır","Sakarya","Mersin","Van","Sivas","Trabzon","Yozgat","Rize","Zonguldak"];
+  previewSize: number = 300;
+  imageAssets = [];
+  imageSrc: any;
+  isSingleMode: boolean = true;
+  thumbSize: number = 160;
+  imagebase64: string = "";
 
   @ViewChild("initialContainer", { static: false })
   initialContainer: ElementRef;
@@ -99,7 +111,8 @@ export class LoginComponent implements OnInit {
       alert("Groceries requires an internet connection to register.");
       return;
     }
-
+    this.user.image = this.imagebase64;
+    console.log("image",this.user.image);
     this.userService.register(this.user).subscribe(
       () => {
         alert("Your account was successfully created.");
@@ -120,11 +133,11 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  onLogin(eventData: Facebook.LoginEventData)  {
-    if  (eventData.error) {
+  onLogin(eventData: Facebook.LoginEventData) {
+    if (eventData.error) {
       console.error(eventData.error);
     } else {
-      console.log("token is : ",  eventData.loginResponse.token);
+      console.log("token is : ", eventData.loginResponse.token);
     }
   }
 
@@ -163,9 +176,9 @@ export class LoginComponent implements OnInit {
     });
     this.scrollList.nativeElement.scrollToVerticalOffset(0);
     if (!this.isLoggingIn) {
-      this.formControls.nativeElement.rows = "auto, auto, auto, auto, auto, auto";
-    }
-    else {
+      this.formControls.nativeElement.rows =
+        "auto, auto, auto, auto, auto, auto";
+    } else {
       this.formControls.nativeElement.rows = "50, 50";
     }
   }
@@ -215,5 +228,62 @@ export class LoginComponent implements OnInit {
         // Kick off the animation queue
         new Animation(animations, false).play();
       });
+  }
+
+  public onSelectSingleTap() {
+    this.isSingleMode = true;
+
+    let context = imagepicker.create({
+      mode: "single"
+    });
+    this.startSelection(context);
+  }
+
+  private startSelection(context) {
+    let that = this;
+
+    context
+      .authorize()
+      .then(() => {
+        that.imageAssets = [];
+        that.imageSrc = null;
+        return context.present();
+      })
+      .then(selection => {
+        console.log("Selection done: " + JSON.stringify(selection[0]._android));
+        that.imageSrc =
+          that.isSingleMode && selection.length > 0 ? selection[0] : null;
+        fromAsset(selection[0]).then(image => {
+          var base64 = image.toBase64String("png");
+          // thumbnail.src = "data:image/png;base64," + base64;
+          this.imagebase64 = base64;
+        });
+        // set the images to be loaded from the assets with optimal sizes (optimize memory usage)
+        selection.forEach(function(element) {
+          element.options.width = that.isSingleMode
+            ? that.previewSize
+            : that.thumbSize;
+          element.options.height = that.isSingleMode
+            ? that.previewSize
+            : that.thumbSize;
+        });
+
+        that.imageAssets = selection;
+      })
+      .catch(function(e) {
+        console.log(e);
+      });
+  }
+  public getBase64(source) {
+    let me = this;
+    let file = source;
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function() {
+      console.log(reader.result);
+    };
+    reader.onerror = function(error) {
+      console.log("Error: ", error);
+    };
   }
 }

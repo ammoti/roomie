@@ -5,5 +5,7 @@ export const authProviders = [
 ];
 
 export const appRoutes = [
-  { path: "", redirectTo: "/matches", pathMatch: "full" }
+  { path: "", redirectTo: "/matches", pathMatch: "full" },
+  { path: "", redirectTo: "/questions", pathMatch: "full" },
+  { path: "", redirectTo: "/contact/:id", pathMatch: "full" }
 ];

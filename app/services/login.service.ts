@@ -9,6 +9,7 @@ import { tap, catchError } from "rxjs/operators";
 
 import { User } from "../models/user.model";
 import { BackendService } from "./backend.service";
+import { Chat } from "~/models";
 
 @Injectable()
 export class LoginService {
@@ -17,35 +18,79 @@ export class LoginService {
   register(user: User) {
     return this.http
       .post(
-        BackendService.baseUrl + "users/" + BackendService.appKey,
+        BackendService.baseUrl + "api/register",
         JSON.stringify({
-          username: user.email,
-          password: user.password
+          email: user.email,
+          password: user.password,
+          name: user.name,
+          surname: user.surname,
+          isComplete: false,
+          city: user.city,
+          dateOfBirth: new Date(),
+          image: user.image
         }),
         { headers: this.getCommonHeaders() }
       )
       .pipe(catchError(this.handleErrors));
   }
+  sendChat(chat: Chat) {
+    return this.http
+      .post(
+        BackendService.baseUrl + "api/chat/send",
+        JSON.stringify({
+          message: chat.message,
+          ufrom: chat.ufrom,
+          to: chat.to,
+          date: new Date()
+        }),
+        {
+          headers: this.getCommonHeaders()
+        }
+      )
+      .pipe(catchError(this.handleErrors));
+  }
+  getChat(ufrom: string,to: string) {
+    return this.http
+      .post(
+        BackendService.baseUrl + "api/chat/get",
+        JSON.stringify({
+          ufrom: ufrom,
+          to: to
+        }),
+        {
+          headers: this.getCommonHeaders()
+        }
+      )
+      .pipe(
+        tap((data: any) => {
+          console.log("gelen", data);
+        }),
+        catchError(this.handleErrors)
+      );
+  }
 
   login(user: User) {
     return this.http
       .post(
-        BackendService.baseUrl +
-          "api/users/" +
-          BackendService.appKey +
-          "/login",
+        BackendService.baseUrl + "api/login",
         JSON.stringify({
-          username: user.email,
+          email: user.email,
           password: user.password
         }),
         { headers: this.getCommonHeaders() }
       )
       .pipe(
         tap((data: any) => {
-          if (data.authToken === "") {
+          if (data.authToken === "0") {
             alert("Unfortunately we could not find your account.");
+            data.authToken = "";
           }
-          BackendService.token = data.authToken;
+          let userid: number = data.userid;
+          BackendService.token = userid.toString();
+          console.log("is Complete", data.isComplete);
+          BackendService.complete = data.isComplete;
+          console.log("id", userid);
+          BackendService.userId = userid;
         }),
         catchError(this.handleErrors)
       );

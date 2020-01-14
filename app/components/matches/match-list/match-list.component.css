@@ -37,3 +37,41 @@ ListView {
 .delete-container Image {
   height: 20;
 }
+.transparent-area {
+  background-color: rgba(255, 255, 255, 210);
+  border-radius: 20;
+  padding: 20;
+  border-color: white;
+  border-width: 1;
+}
+
+.user-avatar {
+  border-radius: 3;
+  border-width: 1;
+  border-color: #fff;
+}
+
+.page-wrapper {
+  background: linear-gradient(to bottom, #03484f, #436750);
+}
+button {
+  background-color: #6494AA;
+  padding: 6 8;
+  margin: 8 8 8 0;
+  font-size: 13;
+  border-radius: 3;
+  border-width: 1;
+  border-color: #fff;
+}
+
+.button {
+  color: #ffffff;
+}
+
+.button-firebase {
+  background-color: #0b463e;
+}
+
+.icon-container Image {
+  margin: 20 0 0 20;
+}

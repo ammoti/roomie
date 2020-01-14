@@ -47,30 +47,27 @@
             #password
             hint="Password"
             secure="true"
-            returnKeyType="done"
-            (returnPress)="submit()"
             [(ngModel)]="user.password"
             [isEnabled]="!isAuthenticating"
             [class.light]="!isLoggingIn"
             row="1"
           ></TextField>
           <TextField
-            hint="Password"
-            secure="true"
-            returnKeyType="done"
-            (returnPress)="submit()"
-            [(ngModel)]="user.password"
+            hint="Name"
+            [(ngModel)]="user.name"
             [isEnabled]="!isAuthenticating"
             [class.light]="!isLoggingIn"
             [visibility]="!isLoggingIn ? 'visible' : 'hidden'"
             row="2"
           ></TextField>
           <TextField
-            hint="Password"
-            secure="true"
+            hint="Surname"
+            [(ngModel)]="user.surname"
             [isEnabled]="!isAuthenticating"
             [visibility]="!isLoggingIn ? 'visible' : 'hidden'"
             [class.light]="!isLoggingIn"
+            returnKeyType="done"
+            (returnPress)="submit()"
             row="3"
           ></TextField>
           <ListPicker
@@ -78,28 +75,35 @@
             [visibility]="!isLoggingIn ? 'visible' : 'hidden'"
             [items]="items"
             [class.light]="!isLoggingIn"
+            [(ngModel)]="user.city"
             row="4"
-          ></ListPicker>
+          ></ListPicker>  
+          <Image [src]="imageSrc" row="5" [width]="thumbSize" [visibility]="!isLoggingIn ? 'visible' : 'hidden'" style="margin-bottom: 30px;"  [height]="thumbSize" stretch="aspectFit"></Image>
 
           <ActivityIndicator
             [busy]="isAuthenticating"
             rowSpan="2"
           ></ActivityIndicator>
         </GridLayout>
+        <Button text="Pick Photo" row="2" (tap)="onSelectSingleTap()" [visibility]="!isLoggingIn ? 'visible' : 'hidden'" class="pick-photo"></Button>
         <Button
           [text]="isLoggingIn ? 'Login' : 'Sign up'"
           [isEnabled]="!isAuthenticating"
           class="submit-button"
           (tap)="submit()"
-          row="2"
+          row="3"
         ></Button>
-        <FacebookLoginButton (login)="onLogin($event)" class="facebook-button" row="3"></FacebookLoginButton>
+        <FacebookLoginButton
+          (login)="onLogin($event)"
+          class="facebook-button"
+          row="4"
+        ></FacebookLoginButton>
         <Label
           class="forgot-password-label"
           text="Forgot password?"
           (tap)="forgotPassword()"
           [visibility]="isLoggingIn ? 'visible' : 'hidden'"
-          row="4"
+          row="5"
         ></Label>
 
         <StackLayout
@@ -107,7 +111,7 @@
           class="sign-up-stack"
           (tap)="toggleDisplay()"
           translateY="50"
-          row="5"
+          row="6"
         >
           <Label
             [text]="isLoggingIn ? 'Sign up here' : 'Back to login'"

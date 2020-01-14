@@ -9,60 +9,67 @@ import { map, catchError } from "rxjs/operators";
 
 import { BackendService } from "../services/backend.service";
 import { Match } from "../models/match.model";
-import { User } from "~/models/user.model";
+import { Question } from "~/models/question.model";
+import { UserQuestion } from "~/models";
 
 @Injectable()
-export class MatchService {
-  items: BehaviorSubject<Array<User>> = new BehaviorSubject([]);
-  private allItems: Array<User> = [];
-  baseUrl = BackendService.baseUrl + "api/getAllUser";
+export class QuestionService {
+  items: BehaviorSubject<Array<Question>> = new BehaviorSubject([]);
+  private allItems: Array<Question> = [];
+  baseUrl = BackendService.baseUrl + "api/getAllQuestions";
 
   constructor(private http: HttpClient, private zone: NgZone) {}
 
-  load(userid: string) {
+  load() {
     return this.http
-      .get(this.baseUrl + "/" + userid, {
+      .get(this.baseUrl, {
         headers: this.getCommonHeaders()
       })
       .pipe(
         map((data: any[]) => {
+          console.log(data);
           this.allItems = data
             // .sort((a, b) => {
             //   return a._kmd.lmt > b._kmd.lmt ? -1 : 1;
             // })
-            .map(
-              user =>
-                new User(
-                  user.id,
-                  user.name,
-                  user.password,
-                  user.email,
-                  user.surname,
-                  user.dateOfBirth,
-                  user.isComplete,
-                  user.city,
-                  user.image
-                )
-            );
+            .map(quest => new Question(quest.id, quest.question));
           this.publishUpdates();
         }),
         catchError(this.handleErrors)
       );
   }
 
-  add(name: string) {
-    // return this.http.post(
-    //   this.baseUrl,
-    //   JSON.stringify({ Name: name }),
-    //   { headers: this.getCommonHeaders() }
-    // )
-    // .pipe(
-    //   map((data: any) => {
-    //     this.allItems.unshift(new Match(data._id, name, false, false));
-    //     this.publishUpdates();
-    //   }),
-    //   catchError(this.handleErrors)
-    // );
+  add(userquestion: UserQuestion ) {
+    return this.http
+      .post(
+        BackendService.baseUrl + "/api/userinsertquestion",
+        JSON.stringify({ userid: userquestion.userid, questionid: userquestion.questionid, answer: userquestion.answer }),
+        { headers: this.getCommonHeaders() }
+      )
+      .pipe(
+        map((data: any) => {
+          console.log("Gönderildi");
+          console.log(data);
+          this.publishUpdates();
+        }),
+        catchError(this.handleErrors)
+      );
+  }
+  updateIsComplete(userid: number ) {
+    return this.http
+      .put(
+        BackendService.baseUrl + "/api/updateisComplete",
+        JSON.stringify({ userid: userid }),
+        { headers: this.getCommonHeaders() }
+      )
+      .pipe(
+        map((data: any) => {
+          console.log("Gönderildi");
+          console.log(data);
+          this.publishUpdates();
+        }),
+        catchError(this.handleErrors)
+      );
   }
 
   setDeleteFlag(item: Match) {
@@ -93,7 +100,7 @@ export class MatchService {
     // return this.put(item);
   }
 
-  permanentlyDelete(item: User) {
+  permanentlyDelete(item: Question) {
     return this.http
       .delete(this.baseUrl + "/" + item.id, {
         headers: this.getCommonHeaders()

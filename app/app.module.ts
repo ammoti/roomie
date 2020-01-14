@@ -13,11 +13,20 @@ import { LoginModule } from "./components/login/login.module";
 import { NativeScriptFacebookModule } from "nativescript-facebook/angular";
 import * as application from "application";
 import { MatchesModule } from "./components/matches/matches.module";
+import { QuestionsModule } from "./components/questions/questions.module";
+import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
+import { NativeScriptUIListViewModule } from "nativescript-ui-listview/angular";
+
+import { TNSFontIconModule } from "nativescript-ngx-fonticon";
+import { NativeScriptAnimationsModule } from "nativescript-angular/animations";
+import { registerElement } from "nativescript-angular/element-registry";
+import { ContactModule } from "./components/contact/contact.module";
 
 let nsFacebook = require("nativescript-facebook");
 application.on(application.launchEvent, function(args: any) {
   nsFacebook.init("510997839630218");
 });
+registerElement("FAB", () => require("nativescript-floatingactionbutton").Fab);
 
 setStatusBarColors();
 
@@ -30,7 +39,15 @@ setStatusBarColors();
     NativeScriptRouterModule.forRoot(appRoutes),
     LoginModule,
     MatchesModule,
-    NativeScriptFacebookModule
+    QuestionsModule,
+    ContactModule,
+    NativeScriptFacebookModule,
+    TNSFontIconModule.forRoot({
+      "mdi": "fonts/materialdesignicons.css"
+    }),
+    NativeScriptAnimationsModule,
+    NativeScriptUISideDrawerModule,
+    NativeScriptUIListViewModule
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent],

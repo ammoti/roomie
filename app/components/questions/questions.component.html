@@ -1,0 +1,115 @@
+<GridLayout #container class="background" rows="auto,auto,auto,auto">
+  <!-- Row 1: The custom action bar -->
+  <GridLayout row="0" columns="44, *, auto" class="action-bar-custom">
+    <Label col="1" text="Roomie Quest List"></Label>
+
+    <!-- Wrap the image in a StackLayout to give it a bigger tap target -->
+    <GridLayout col="2" (tap)="showMenu()">
+      <Image src="res://menu" stretch="none"></Image>
+    </GridLayout>
+  </GridLayout>
+  <!-- Row 3: The grocery list -->
+
+  <GridLayout
+    rows="auto, auto, 300"
+    [row]="1"
+    (loading)="showActivityIndicator()"
+    (loaded)="hideActivityIndicator()"
+    class="matchList"
+    [@scale-in]="'in'"
+    row="1"
+    class="transparent-area m-t-20"
+  >
+    <Label row="0" class="section-title" text="Questions"></Label>
+    <Label
+      row="1"
+      class="section-subtitle"
+      text="Please answer the questions swipe right(NO) or left(YES)"
+      textWrap="true"
+    ></Label>
+
+    <RadListView
+      #citiesListView
+      row="2"
+      [items]="question.items | async"
+      (itemLoading)="onItemLoading($event)"
+      selectionBehavior="None"
+      swipeActions="true"
+      (itemSwipeProgressEnded)="onSwipeCellFinished($event)"
+      (itemSwipeProgressStarted)="onSwipeCellStarted($event)"
+      (itemSwipeProgressChanged)="onCellSwiping($event)"
+      class="m-t-10"
+      orientation="vertical"
+      style="border-radius: 5; background-color: transparent"
+    >
+      <!-- rows template -->
+      <ScrollView orientation="vertical">
+      <ng-template tkListItemTemplate let-item="item">
+        <GridLayout rows="28, 28" columns="auto, *" orientation="vertical">
+          <Label
+            row="0"
+            colSpan="2"
+            class="city-name"
+            [text]="item.question"
+          ></Label>
+          <Label
+            row="1"
+            col="1"
+            class="city-author"
+            text="NO"
+            horizontalAlignment="right"
+          ></Label>
+          <Label
+            row="1"
+            col="1"
+            class="city-author"
+            text="YES"
+            horizontalAlignment="left"
+          ></Label>
+        </GridLayout>
+      </ng-template>
+      </ScrollView>
+
+
+      <!-- swipe actions template -->
+      <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto">
+        <GridLayout columns="*" col="0" id="left-stack">
+          <GridLayout
+            col="1"
+            class="c-bg-blue"
+            (tap)="onLeftSwipeClick($event)"
+            id="btnPopulation"
+            data-id="item.id"
+          >
+            <Label
+              text="NO!!"
+              verticalAlignment="center"
+              horizontalAlignment="center"
+            ></Label>
+          </GridLayout>
+        </GridLayout>
+        <GridLayout columns="*" col="2" id="right-stack">
+          <GridLayout
+            col="0"
+            style="background-color: #436750"
+            (tap)="onRightSwipeClick($event)"
+            id="btnDelete"
+          >
+            <Label
+              text="YES"
+              verticalAlignment="center"
+              horizontalAlignment="center"
+            ></Label>
+          </GridLayout>
+        </GridLayout>
+      </GridLayout>
+    </RadListView>
+  </GridLayout>
+  <Button
+  text="OK Let's Match"
+  class="submit-button"
+  (tap)="submit()"
+  row="3"
+></Button>
+  <ActivityIndicator [busy]="isLoading" row="4"></ActivityIndicator>
+</GridLayout>

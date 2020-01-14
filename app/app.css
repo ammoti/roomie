@@ -15,3 +15,14 @@ TextField {
 .line-through {
   text-decoration: line-through;
 }
+ActionBar {
+  padding-top: 10;
+}
+
+Label.mdi-actionitem {
+  /*margin-top: 10;*/
+}
+
+Label.mdi-menu {
+  margin-top: 6;
+}

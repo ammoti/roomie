@@ -3,22 +3,50 @@
   [class.visible]="listLoaded"
   [items]="matches.items | async"
   (itemLoading)="makeBackgroundTransparent($event)" >
+  <ScrollView orientation="vertical">
+
+  
   <ng-template let-item="item">
+  
     <GridLayout
       columns="*, auto"
       class="container"
-      orientation="vertical"
-      [opacity]="item.done ? '0.8' : '1'">
+      orientation="vertical">
       <!-- Wrap in containers for bigger tap targets -->
-      <StackLayout
+      <!-- <StackLayout
         col="0"
         orientation="horizontal"
         class="tap-target">
-        <Image
-          class="check-box" src="res://apple.png"></Image>
-        <Label
-          [text]="item.name"></Label>
+      <Image [src]="loadImage(item.image)" row="0" rowspan="2" col="0" width="80" height="80" stretch="aspectFill"></Image>
+      
+      <Label
+      [text]="item.name" style="margin-left:20;" row="0" col="1"></Label>
+      <Label
+          [text]="item.name" row="1" col="1"></Label>
       </StackLayout>
+       -->
+<GridLayout orientation="vertical">
+  <StackLayout class="page-wrapper p-20" orientation="vertical">
+    <GridLayout rows="auto, *" orientation="vertical">
+      <StackLayout [@scale-in]="'in'" row="0" class="transparent-area">
+         <GridLayout columns="auto, *, auto" orientation="vertical" class="m-t-8">
+          <img col="0" class="user-avatar m-r-10" [src]="loadImage(item.image)" height="80" width="80">
+          <StackLayout col="1" verticalAlignment="middle">
+            <Label [text]="item.name" style="margin-left:10;color:white"></Label>
+            <!-- <Label [text]="item.email" class="user-email"></Label> -->
+          </StackLayout>
+          <Button col="2" text="Contact" (tap)="contact(item.id)" class="button button-firebase m-l-4"
+                  horizontalAlignment="right"></Button>
+        </GridLayout>
+      </StackLayout>
+
     </GridLayout>
+  </StackLayout>
+</GridLayout>
+
+    </GridLayout>
+ 
+    
   </ng-template>
+</ScrollView>
 </ListView>
